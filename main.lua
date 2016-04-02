@@ -7,6 +7,7 @@ createEnemyTimerMax = 0.4
 createEnemyTimer = createEnemyTimerMax
 enemyImg = nil
 bulletImg = nil
+fireSound = nil
 bullets = {}
 enemies = {}
 isAlive = true
@@ -25,9 +26,10 @@ end
 
 function love.load(arg)
   --loads the image and bullet to use inside love
-  player.img = love.graphics.newImage('assets/plane.png')
+  player.img = love.graphics.newImage('assets/starship.png')
   bulletImg = love.graphics.newImage('assets/bullet.png')
-  enemyImg = love.graphics.newImage('assets/enemy.png')
+  enemyImg = love.graphics.newImage('assets/kling.png')
+  fireSound = love.audio.newSource("assets/fire.wav", "static")
 end
 
 function love.draw(dt)
@@ -44,7 +46,7 @@ function love.draw(dt)
   if isAline then
     love.graphics.draw(player.img, player.x, player.y)
   else
-    love.graphics.print("Press 'R' to restart", love.graphics:getWidth()/2-50, love.graphics:getHeight()/2-10)
+    --love.graphics.print("Press 'R' to restart", love.graphics:getWidth()/2-50, love.graphics:getHeight()/2-10)
   end
 end
 
@@ -68,6 +70,7 @@ function love.update(dt)
     --Create some bullets
     newBullet = {x = player.x + (player.img:getWidth()/2), y = player.y, img = bulletImg}
     table.insert(bullets, newBullet)
+    fireSound:play()
     canShoot = false
     canShootTimer = canShootTimerMax
   end
@@ -113,26 +116,21 @@ function love.update(dt)
 
     if CheckCollision(enemy.x, enemy.y, enemy.img:getWidth(), enemy.img:getHeight(), player.x, player.y, player.img:getWidth(), player.img:getHeight())
     and isAlive then
-      print("Died")
       table.remove(enemies, i)
       isAlive = false
+      -- remove all our bullets and enemies from screen
+      bullets = {}
+      enemies = {}
+      -- reset timers
+      canShootTimer = canShootTimerMax
+      createEnemyTimer = createEnemyTimerMax
+      -- move player back to default position
+      player.x = 180
+      player.y = 550
+      -- reset our game state
+      score = 0
+      isAlive = true
     end
-  end
-
-  if not isAlive and love.keyboard.isDown('r') then
-    -- remove all our bullets and enemies from screen
-    print("Entrou")
-    bullets = {}
-    enemies = {}
-    -- reset timers
-    canShootTimer = canShootTimerMax
-    createEnemyTimer = createEnemyTimerMax
-    -- move player back to default position
-    player.x = 50
-    player.y = 710
-    -- reset our game state
-    score = 0
-    isAlive = true
   end
 
 end
