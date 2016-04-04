@@ -18,7 +18,7 @@ fireSound = nil
 enemyFireSound = nil
 background = nil
 isAlive = true
-score = 0
+score = {klingon = 0, federation = 0}
 
 function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
   return x1 < x2+w2 and
@@ -28,10 +28,18 @@ function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
 end
 
 --FIXME
-function getPosition(x)
-  num = x
-  while x == num and (num >= -22 and num <= 450) do
-    num = math.random(x - 30, x + 30)
+function getPositionL()
+  num = enemy.x + (math.abs(enemy.x - player.x))
+  if num > 480 then
+    num = 450
+  end
+  return num
+end
+
+function getPositionR()
+  num = enemy.x - (math.abs(enemy.x - player.x))
+  if num < 480 then
+    num = -450
   end
   return num
 end
@@ -62,22 +70,26 @@ function love.draw(dt)
   if isAlive then
     love.graphics.draw(player.img, player.x, player.y)
     love.graphics.draw(enemy.img, enemy.x, enemy.y)
-    love.graphics.print("SCORE:", 50, 25)
+    love.graphics.print("POINTS:" .. score.federation .. " X " .. score.klingon, 50, 25)
   else
     --love.graphics.print("Press 'R' to restart", love.graphics:getWidth()/2-50, love.graphics:getHeight()/2-10)
   end
 end
 
 function love.update(dt)
-
   if love.keyboard.isDown('escape') then
     love.event.push('quit')
   end
 
   if love.keyboard.isDown('left', 'a') then
     player.x = player.x - (player.speed * dt)
+    enemy.x = getPositionL()
+    print("l" .. enemy.x)
+    print("p" .. player.x)
   elseif love.keyboard.isDown('right', 'd') then
     player.x = player.x + (player.speed * dt)
+    enemy.x = getPositionR()
+    print("r" .. enemy.x)
   end
 
   canShootTimer = canShootTimer - (1 * dt)
@@ -128,7 +140,7 @@ function love.update(dt)
   for i, bullet in ipairs(bullets) do
     if CheckCollision(enemy.x, enemy.y, enemy.img:getWidth(), enemy.img:getHeight(), bullet.x, bullet.y, bullet.img:getWidth(), bullet.img:getHeight()) then
       table.remove(bullets, i)
-      score = score + 1
+      score.federation = score.federation + 1
       print("Game over")
     end
   end
@@ -136,7 +148,7 @@ function love.update(dt)
   for i, enemyBullet in ipairs(enemyBullets) do
     if CheckCollision(player.x, player.y, player.img:getWidth(), player.img:getHeight(), enemyBullet.x, enemyBullet.y, enemyBullet.img:getWidth(), enemyBullet.img:getHeight()) then
       table.remove(enemyBullets, i)
-      score = score + 1
+      score.klingon = score.klingon + 1
       print("Klingon wins")
     end
   end
