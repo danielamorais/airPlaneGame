@@ -27,23 +27,21 @@ function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
   y2 < y1+h1
 end
 
---FIXME
-function getPositionL()
-  num = enemy.x + (math.abs(enemy.x - player.x))
-  if num > 480 then
-    num = 450
-  end
-  return num
-end
-
-function getPositionR()
-  num = enemy.x - (math.abs(enemy.x - player.x))
-  if num < 480 then
-    num = -450
-  end
-  return num
-end
-
+function setPosition(xPosition, xSpeed, dt, position)
+   if position == 'r' then
+        xPosition = xPosition + (xSpeed * dt)  
+   end     
+   if position == 'l' then       
+        xPosition = xPosition - (xSpeed * dt)    
+   end     
+   if xPosition > 418 then
+        xPosition = 418
+   end
+   if xPosition < 6 then
+        xPosition = 6
+   end
+   return xPosition       
+end 
 
 function love.load(arg)
   player.img = love.graphics.newImage('assets/starship.png')
@@ -81,15 +79,18 @@ function love.update(dt)
     love.event.push('quit')
   end
 
-  if love.keyboard.isDown('left', 'a') then
-    player.x = player.x - (player.speed * dt)
-    enemy.x = getPositionL()
-    print("l" .. enemy.x)
-    print("p" .. player.x)
-  elseif love.keyboard.isDown('right', 'd') then
-    player.x = player.x + (player.speed * dt)
-    enemy.x = getPositionR()
-    print("r" .. enemy.x)
+  if love.keyboard.isDown('left') then
+        player.x = setPosition(player.x, player.speed, dt, 'l')
+        print("p" .. player.x)
+  elseif love.keyboard.isDown('right') then
+        player.x = setPosition(player.x, player.speed, dt, 'r') 
+        print("p" .. player.x)
+  end
+  
+  if love.keyboard.isDown('a') then
+     enemy.x = setPosition(enemy.x, enemy.speed, dt, 'l')
+  elseif love.keyboard.isDown('d') then
+     enemy.x = setPosition(enemy.x, enemy.speed, dt, 'r') 
   end
 
   canShootTimer = canShootTimer - (1 * dt)
