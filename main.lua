@@ -16,6 +16,9 @@ enemyBullets = {}
 
 fireSound = nil
 enemyFireSound = nil
+backgroundSound = nil
+explosionSound = nil
+
 background = nil
 isAlive = true
 score = {klingon = 0, federation = 0}
@@ -43,6 +46,12 @@ function setPosition(xPosition, xSpeed, dt, position)
    return xPosition       
 end 
 
+function love.enter()
+      backgroundSound = love.audio.newSource('assets/background.wav', 'stream')    
+      love.audio.play(backgroundSound)
+end
+
+
 function love.load(arg)
   player.img = love.graphics.newImage('assets/starship.png')
   bulletImg = love.graphics.newImage('assets/bullet.png')
@@ -51,12 +60,12 @@ function love.load(arg)
   background = love.graphics.newImage('assets/stars.jpg')
   fireSound = love.audio.newSource('assets/fire.wav', 'static')
   enemyFireSound = love.audio.newSource('assets/klingon.wav', 'static')
+  explosionSound = love.audio.newSource('assets/explosion.wav', 'static')
   love.graphics.setFont(love.graphics.newFont('assets/federation.ttf' , 35))
 end
 
 function love.draw(dt)
   love.graphics.draw(background, 0, 0)
-  love.graphics.draw(player.img, player.x, player.y)
   for i, bullet in ipairs(bullets) do
     love.graphics.draw(bullet.img, bullet.x, bullet.y)
   end
@@ -70,7 +79,14 @@ function love.draw(dt)
     love.graphics.draw(enemy.img, enemy.x, enemy.y)
     love.graphics.print("POINTS:" .. score.federation .. " X " .. score.klingon, 50, 25)
   else
-    --love.graphics.print("Press 'R' to restart", love.graphics:getWidth()/2-50, love.graphics:getHeight()/2-10)
+    love.graphics.setFont(love.graphics.newFont('assets/federation.ttf' , 60))    
+    love.graphics.print("GAME OVER", love.graphics:getWidth()/2-100, love.graphics:getHeight()/2-180)
+    love.graphics.print("Press 'R' to restart", love.graphics:getWidth()/2-180, love.graphics:getHeight()/2-90)
+    if love.keyboard.isDown('r') then
+        isAlive = true
+        love.graphics.setFont(love.graphics.newFont('assets/federation.ttf' , 35))   
+        score = {klingon = 0, federation = 0} 
+    end
   end
 end
 
@@ -81,10 +97,8 @@ function love.update(dt)
 
   if love.keyboard.isDown('left') then
         player.x = setPosition(player.x, player.speed, dt, 'l')
-        print("p" .. player.x)
   elseif love.keyboard.isDown('right') then
         player.x = setPosition(player.x, player.speed, dt, 'r') 
-        print("p" .. player.x)
   end
   
   if love.keyboard.isDown('a') then
@@ -129,7 +143,7 @@ function love.update(dt)
 
   for i, enemyBullet in ipairs(enemyBullets) do
     enemyBullet.y = enemyBullet.y + (250 * dt)
-    print(enemyBullet.y)
+    --print(enemyBullet.y)
     if enemyBullet.y > 750 then --remove the bullets when they pass off the screen
       table.remove(enemyBullets, i)
     end
@@ -142,7 +156,9 @@ function love.update(dt)
     if CheckCollision(enemy.x, enemy.y, enemy.img:getWidth(), enemy.img:getHeight(), bullet.x, bullet.y, bullet.img:getWidth(), bullet.img:getHeight()) then
       table.remove(bullets, i)
       score.federation = score.federation + 1
-      print("Game over")
+      if score.federation > 4 then
+        isAlive = false
+      end  
     end
   end
 
@@ -150,7 +166,9 @@ function love.update(dt)
     if CheckCollision(player.x, player.y, player.img:getWidth(), player.img:getHeight(), enemyBullet.x, enemyBullet.y, enemyBullet.img:getWidth(), enemyBullet.img:getHeight()) then
       table.remove(enemyBullets, i)
       score.klingon = score.klingon + 1
-      print("Klingon wins")
+      if score.klingon > 4 then
+        isAlive = false
+      end 
     end
   end
 
