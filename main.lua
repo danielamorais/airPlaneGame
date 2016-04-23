@@ -17,6 +17,7 @@ fireSound = nil
 enemyFireSound = nil
 backgroundSound = nil
 explosionSound = nil
+musicSeconds = 0 
 
 background = nil
 isAlive = true
@@ -45,7 +46,7 @@ function love.load(arg)
   explosionSound = love.audio.newSource('assets/explosion.wav', 'static')
   love.graphics.setFont(love.graphics.newFont('assets/federation.ttf' , 35))
   backgroundSound = love.audio.newSource('assets/background.wav', 'stream') 
-  backgroundSound:setVolume(0.9)
+  backgroundSound:setVolume(1)
 end
 
 function love.draw(dt)
@@ -75,6 +76,14 @@ function love.draw(dt)
 end
 
 function love.update(dt)
+  musicSeconds = musicSeconds + dt 
+  if musicSeconds > 10 then
+     love.audio.rewind(backgroundSound)
+     love.audio.play(backgroundSound)
+     backgroundSound:setVolume(1)
+     musicSeconds = 0   
+  end
+        
   if love.keyboard.isDown('escape') then love.event.push('quit') end
 
   if love.keyboard.isDown('left') then
