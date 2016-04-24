@@ -10,7 +10,8 @@ United Federation of Planets needs you, win the battle between Klingon and Feder
 </p>
 
 ## Contributing 
-Everyone is welcome to contribute so feel confortable to send pull requests! (Even if you're a Star Wars fan)   
+Everyone is welcome to contribute so feel confortable to send pull requests! (Even if you're a Star Wars fan).<br>
+Click [here](https://trello.com/b/5C8JQRlI/startrekgame) to access a suggestion list of what needs to be done
 
 ### Requirements 
 - LOVE 0.9.2 (Baby Inspector) or higher 
