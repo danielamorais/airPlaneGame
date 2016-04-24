@@ -20,7 +20,14 @@ Click [here](https://trello.com/b/5C8JQRlI/startrekgame) to access a suggestion 
 ### How to build 
 Linux: 
 ```
+$ git clone git@github.com:danielamorais/starTrekGame.git
+$ cd starTrekGame/
 $ love . 
+```
+### Installation
+Get the latest version [here](https://github.com/danielamorais/starTrekGame/releases). 
+```
+$ love starTrekGame.love 
 ```
 
 ### License and credits 
