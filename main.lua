@@ -28,6 +28,8 @@ background = nil
 federationLogo = nil
 isAlive = true
 playing = false
+onMenu = true
+onCredits = false
 
 function checkCollision(x1, y1, w1, h1, x2, y2, w2, h2)
     return x1 < x2 + w2 and x2 < x1 + w1 and y1 < y2 + h2 and y2 < y1 + h1
@@ -88,23 +90,42 @@ function love.draw(dt)
                 score = { klingon = 0, federation = 0 }
             end
         end
-    else
+    elseif onMenu then
         love.graphics.setFont(love.graphics.newFont('assets/federation.ttf', 50))
         love.graphics.draw(federationLogo, 100, 180, 0, 0.5, 0.5)
         if dotIsUp then
-            love.graphics.draw(dotImg, 115, 410, 0, 0.4, 0.4)
+            love.graphics.draw(dotImg, 160, 410, 0, 0.4, 0.4)
         else
-            love.graphics.draw(dotImg, 115, 460, 0, 0.4, 0.4)
+            love.graphics.draw(dotImg, 160, 460, 0, 0.4, 0.4)
         end
-        love.graphics.print("START GAME", 145, 390)
-        love.graphics.print("CREDITS", 145, 440)
+        love.graphics.print("START", 190, 390)
+        love.graphics.print("CREDITS", 190, 440)
+    elseif onCredits then
+        love.graphics.setFont(love.graphics.newFont('assets/federation.ttf', 20))
+        love.graphics.print("Press 'blackspace' to return", 10, 0)
+        love.graphics.setFont(love.graphics.newFont('assets/federation.ttf', 50))
+        love.graphics.print("IT'S A OPEN SOURCE PROJECT", 30, 90)
+        love.graphics.setFont(love.graphics.newFont('assets/federation.ttf', 30))
+        love.graphics.print("Access github.com/danielamorais/starTrekGame\n to get more information.", 10, 200)
+        love.graphics.setFont(love.graphics.newFont('assets/federation.ttf', 25))
+        love.graphics.print("Licensed under the MIT License.", 130, 600)
     end
 end
 
 function love.keypressed(key)
-    if key == "return" and dotIsUp then
-        beepSound:play()
-        playing = true
+    if not playing then
+        if key == "return" and dotIsUp then
+            beepSound:play()
+            onMenu = false
+            playing = true
+        end
+        if key == "return" and not dotIsUp then
+            onMenu = false
+            onCredits = true
+        end
+        if key == "backspace" and not onMenu and not playing then
+            onMenu = true
+        end
     end
     if key == "down" then
         dotIsUp = false
@@ -126,7 +147,7 @@ function love.update(dt)
         love.audio.play(backgroundSound)
         musicSeconds = 0
     end
-    if introSeconds > 38 and playing == false then
+    if introSeconds > 38 and not playing then
         love.audio.rewind(introSound)
         love.audio.play(introSound)
         introSeconds = 0
