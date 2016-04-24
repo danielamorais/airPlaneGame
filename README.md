@@ -1,13 +1,16 @@
 # Star Trek Game
 > *The Project Genesis*
 
+<p align="center">
+<img src="https://res.cloudinary.com/tars/image/upload/v1461456317/United_Federation_of_Planets_logo_lt14y8.png" alt="United Federation of Planets Logo")
+</p>
 United Federation of Planets needs you, win the battle between Klingon and Federation! Don't let Kruge obtain Genesis Device and discover the secret of Genesis. <br>
 <p align="center">
-<img src="https://res.cloudinary.com/tars/image/upload/v1461315483/screenshot_bgsuiv.png" alt="Game screenshot")
+<img src="https://res.cloudinary.com/tars/image/upload/v1461456323/gamePrint_roovna.png" alt="Game screenshot")
 </p>
 
 ## Contributing 
-Everyone is welcome to contribuite so feel confortable to send pull requests! (Even if you're a Star Wars fan)   
+Everyone is welcome to contribute so feel confortable to send pull requests! (Even if you're a Star Wars fan)   
 
 ### Requirements 
 - LOVE 0.9.2 (Baby Inspector) or higher 
